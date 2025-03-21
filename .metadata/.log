@@ -1,0 +1,168 @@
+!SESSION 2025-03-21 12:35:09.642 -----------------------------------------------
+eclipse.buildId=Version 1.17.0
+java.version=21.0.3
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2025-03-21 12:35:14.544
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2025-03-21 12:35:14.544
+!MESSAGE Log4j2 initialized with config file C:\Users\Gerda\Documents\GitHub\protocolbuffer\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2025-03-21 12:35:16.825
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2025-03-21 12:35:39.918
+!MESSAGE Indexed 'cubeprojekt' (31 sources, 136 headers) in 4.54 sec: 16,022 declarations; 96,605 references; 3 unresolved inclusions; 50 syntax errors; 171 unresolved names (0.15%)
+
+!ENTRY org.eclipse.ui.workbench 4 2 2025-03-21 12:35:46.963
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.ui.workbench".
+!STACK 0
+java.lang.NullPointerException: Cannot invoke "org.eclipse.cdt.managedbuilder.core.IManagedBuildInfo.getDefaultConfiguration()" because "buildInfo" is null
+	at com.st.stm32cube.ide.mcu.build.ui.decorator.BoldDecorator.decorate(BoldDecorator.java:79)
+	at org.eclipse.ui.internal.decorators.LightweightDecoratorDefinition.decorate(LightweightDecoratorDefinition.java:253)
+	at org.eclipse.ui.internal.decorators.LightweightDecoratorManager$LightweightRunnable.run(LightweightDecoratorManager.java:105)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:47)
+	at org.eclipse.ui.internal.decorators.LightweightDecoratorManager.decorate(LightweightDecoratorManager.java:360)
+	at org.eclipse.ui.internal.decorators.LightweightDecoratorManager.getDecorations(LightweightDecoratorManager.java:346)
+	at org.eclipse.ui.internal.decorators.DecorationScheduler$1.queue(DecorationScheduler.java:419)
+	at org.eclipse.ui.internal.decorators.DecorationScheduler$1.run(DecorationScheduler.java:397)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY org.eclipse.ui 4 4 2025-03-21 12:35:46.965
+!MESSAGE Exception in Decorator. The 'linkerDecorator' decorator will be disabled.
+!SUBENTRY 1 org.eclipse.ui 4 4 2025-03-21 12:35:46.965
+!MESSAGE Cannot invoke "org.eclipse.cdt.managedbuilder.core.IManagedBuildInfo.getDefaultConfiguration()" because "buildInfo" is null
+!STACK 0
+java.lang.NullPointerException: Cannot invoke "org.eclipse.cdt.managedbuilder.core.IManagedBuildInfo.getDefaultConfiguration()" because "buildInfo" is null
+	at com.st.stm32cube.ide.mcu.build.ui.decorator.BoldDecorator.decorate(BoldDecorator.java:79)
+	at org.eclipse.ui.internal.decorators.LightweightDecoratorDefinition.decorate(LightweightDecoratorDefinition.java:253)
+	at org.eclipse.ui.internal.decorators.LightweightDecoratorManager$LightweightRunnable.run(LightweightDecoratorManager.java:105)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:47)
+	at org.eclipse.ui.internal.decorators.LightweightDecoratorManager.decorate(LightweightDecoratorManager.java:360)
+	at org.eclipse.ui.internal.decorators.LightweightDecoratorManager.getDecorations(LightweightDecoratorManager.java:346)
+	at org.eclipse.ui.internal.decorators.DecorationScheduler$1.queue(DecorationScheduler.java:419)
+	at org.eclipse.ui.internal.decorators.DecorationScheduler$1.run(DecorationScheduler.java:397)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY org.eclipse.core.resources 4 77 2025-03-21 12:35:51.426
+!MESSAGE Invalid project description.
+!SUBENTRY 1 unknown 0 0 2025-03-21 12:35:51.426
+!MESSAGE OK
+!SUBENTRY 1 org.eclipse.core.resources 4 77 2025-03-21 12:35:51.426
+!MESSAGE C:\Users\Gerda\Documents\GitHub\protocolbuffer\cubeprojekt overlaps the location of another project: 'cubeprojekt'
+
+!ENTRY com.st.stm32cube.common.projectcreation 4 0 2025-03-21 12:35:51.427
+!MESSAGE Project is null
+
+!ENTRY org.eclipse.core.resources 4 77 2025-03-21 12:49:52.122
+!MESSAGE Invalid project description.
+!SUBENTRY 1 unknown 0 0 2025-03-21 12:49:52.122
+!MESSAGE OK
+!SUBENTRY 1 org.eclipse.core.resources 4 77 2025-03-21 12:49:52.122
+!MESSAGE C:\Users\Gerda\Documents\GitHub\protocolbuffer\cubeprojekt overlaps the location of another project: 'cubeprojekt'
+
+!ENTRY com.st.stm32cube.common.projectcreation 4 0 2025-03-21 12:49:52.122
+!MESSAGE Project is null
+
+!ENTRY org.eclipse.core.resources 4 77 2025-03-21 12:50:33.524
+!MESSAGE Invalid project description.
+!SUBENTRY 1 unknown 0 0 2025-03-21 12:50:33.524
+!MESSAGE OK
+!SUBENTRY 1 org.eclipse.core.resources 4 77 2025-03-21 12:50:33.524
+!MESSAGE C:\Users\Gerda\Documents\GitHub\protocolbuffer\cubeprojekt overlaps the location of another project: 'cubeprojekt'
+
+!ENTRY com.st.stm32cube.common.projectcreation 4 0 2025-03-21 12:50:33.524
+!MESSAGE Project is null
+
+!ENTRY org.eclipse.core.resources 4 77 2025-03-21 12:50:51.967
+!MESSAGE Invalid project description.
+!SUBENTRY 1 unknown 0 0 2025-03-21 12:50:51.967
+!MESSAGE OK
+!SUBENTRY 1 org.eclipse.core.resources 4 77 2025-03-21 12:50:51.967
+!MESSAGE C:\Users\Gerda\Documents\GitHub\protocolbuffer\cubeprojekt overlaps the location of another project: 'cubeprojekt'
+
+!ENTRY com.st.stm32cube.common.projectcreation 4 0 2025-03-21 12:50:51.968
+!MESSAGE Project is null
+
+!ENTRY org.eclipse.core.resources 4 77 2025-03-21 12:51:24.897
+!MESSAGE Invalid project description.
+!SUBENTRY 1 unknown 0 0 2025-03-21 12:51:24.897
+!MESSAGE OK
+!SUBENTRY 1 org.eclipse.core.resources 4 77 2025-03-21 12:51:24.897
+!MESSAGE C:\Users\Gerda\Documents\GitHub\protocolbuffer\cubeprojekt overlaps the location of another project: 'cubeprojekt'
+
+!ENTRY com.st.stm32cube.common.projectcreation 4 0 2025-03-21 12:51:24.898
+!MESSAGE Project is null
+
+!ENTRY org.eclipse.core.resources 4 77 2025-03-21 12:51:48.078
+!MESSAGE Invalid project description.
+!SUBENTRY 1 unknown 0 0 2025-03-21 12:51:48.078
+!MESSAGE OK
+!SUBENTRY 1 org.eclipse.core.resources 4 77 2025-03-21 12:51:48.078
+!MESSAGE C:\Users\Gerda\Documents\GitHub\protocolbuffer\cubeprojekt overlaps the location of another project: 'cubeprojekt'
+
+!ENTRY com.st.stm32cube.common.projectcreation 4 0 2025-03-21 12:51:48.079
+!MESSAGE Project is null
+
+!ENTRY org.eclipse.core.resources 4 77 2025-03-21 12:54:04.701
+!MESSAGE Invalid project description.
+!SUBENTRY 1 unknown 0 0 2025-03-21 12:54:04.701
+!MESSAGE OK
+!SUBENTRY 1 org.eclipse.core.resources 4 77 2025-03-21 12:54:04.701
+!MESSAGE C:\Users\Gerda\Documents\GitHub\protocolbuffer\cubeprojekt overlaps the location of another project: 'cubeprojekt'
+
+!ENTRY com.st.stm32cube.common.projectcreation 4 0 2025-03-21 12:54:04.702
+!MESSAGE Project is null
+
+!ENTRY org.eclipse.core.resources 4 77 2025-03-21 12:55:26.651
+!MESSAGE Invalid project description.
+!SUBENTRY 1 unknown 0 0 2025-03-21 12:55:26.651
+!MESSAGE OK
+!SUBENTRY 1 org.eclipse.core.resources 4 77 2025-03-21 12:55:26.651
+!MESSAGE C:\Users\Gerda\Documents\GitHub\protocolbuffer\cubeprojekt overlaps the location of another project: 'cubeprojekt'
+
+!ENTRY com.st.stm32cube.common.projectcreation 4 0 2025-03-21 12:55:26.651
+!MESSAGE Project is null
+
+!ENTRY org.eclipse.core.resources 4 77 2025-03-21 12:55:26.715
+!MESSAGE Invalid project description.
+!SUBENTRY 1 unknown 0 0 2025-03-21 12:55:26.715
+!MESSAGE OK
+!SUBENTRY 1 org.eclipse.core.resources 4 77 2025-03-21 12:55:26.715
+!MESSAGE C:\Users\Gerda\Documents\GitHub\protocolbuffer\cubeprojekt overlaps the location of another project: 'cubeprojekt'
+
+!ENTRY com.st.stm32cube.common.projectcreation 4 0 2025-03-21 12:55:26.715
+!MESSAGE Project is null
+
+!ENTRY org.eclipse.core.resources 4 77 2025-03-21 12:57:16.796
+!MESSAGE Invalid project description.
+!SUBENTRY 1 unknown 0 0 2025-03-21 12:57:16.796
+!MESSAGE OK
+!SUBENTRY 1 org.eclipse.core.resources 4 77 2025-03-21 12:57:16.796
+!MESSAGE C:\Users\Gerda\Documents\GitHub\protocolbuffer\cubeprojekt overlaps the location of another project: 'cubeprojekt'
+
+!ENTRY com.st.stm32cube.common.projectcreation 4 0 2025-03-21 12:57:16.797
+!MESSAGE Project is null
+
+!ENTRY org.eclipse.core.resources 4 77 2025-03-21 12:57:53.124
+!MESSAGE Invalid project description.
+!SUBENTRY 1 unknown 0 0 2025-03-21 12:57:53.124
+!MESSAGE OK
+!SUBENTRY 1 org.eclipse.core.resources 4 77 2025-03-21 12:57:53.124
+!MESSAGE C:\Users\Gerda\Documents\GitHub\protocolbuffer\cubeprojekt overlaps the location of another project: 'cubeprojekt'
+
+!ENTRY com.st.stm32cube.common.projectcreation 4 0 2025-03-21 12:57:53.125
+!MESSAGE Project is null
+
+!ENTRY org.eclipse.core.resources 4 77 2025-03-21 12:58:00.750
+!MESSAGE Invalid project description.
+!SUBENTRY 1 unknown 0 0 2025-03-21 12:58:00.750
+!MESSAGE OK
+!SUBENTRY 1 org.eclipse.core.resources 4 77 2025-03-21 12:58:00.750
+!MESSAGE C:\Users\Gerda\Documents\GitHub\protocolbuffer\cubeprojekt overlaps the location of another project: 'cubeprojekt'
+
+!ENTRY com.st.stm32cube.common.projectcreation 4 0 2025-03-21 12:58:00.751
+!MESSAGE Project is null

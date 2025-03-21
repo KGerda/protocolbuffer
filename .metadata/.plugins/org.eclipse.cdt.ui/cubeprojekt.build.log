@@ -1,0 +1,10 @@
+12:58:00 **** Incremental Build of configuration Debug for project cubeprojekt ****
+make -j12 all 
+arm-none-eabi-size  cubeprojekt.elf 
+   text	   data	    bss	    dec	    hex	filename
+  22076	     16	   1720	  23812	   5d04	cubeprojekt.elf
+Finished building: default.size.stdout
+ 
+
+12:58:01 Build Finished. 0 errors, 0 warnings. (took 255ms)
+
