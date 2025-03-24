@@ -25,12 +25,19 @@
 #include <pb_encode.h>
 #include <pb_decode.h>
 #include "led_blink.pb.h"
+#include "circularbuffer.h"
 
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
- char data;
+#define message_length 2
+uint8_t buffer[BUFFER_LEN];
+uint8_t data[32]={0};
+uint8_t ch=0;
+bool stat=0;
+uint8_t datacounter=0;
+uint8_t uartcounter=0;
 
 /* USER CODE END PTD */
 
@@ -69,43 +76,62 @@ int __io_putchar(int ch)
 	return ch;
 }
 
-LedStatus receive_message(bool *stat,uint8_t *buffer,uint8_t length)
+LedStatus decode_and_execute()   //bool *stat,uint8_t *buffer,uint8_t length
 {
+	getdata_frombuffer(data, message_length);
 	 /* Allocate space for the decoded message. */
 	 LedStatus message = LedStatus_init_default;
 
 	 /* Create a stream that reads from the buffer. */
-	 pb_istream_t stream = pb_istream_from_buffer(buffer, length);
+	 pb_istream_t stream = pb_istream_from_buffer(data, message_length);
 
-	 *stat = pb_decode(&stream, LedStatus_fields, &message);
+	 stat = pb_decode(&stream, LedStatus_fields, &message);
 
-	 if(*stat==1)
+	 if(stat==1)
 	 {
-		 printf("stat=1\r\n");
+		 //printf("stat=1\r\n");
 			  if(message.status==1)
 			  {
-			    printf("led=1\r\n");
+			   // printf("led=1\r\n");
 			    HAL_GPIO_WritePin(LD1_GPIO_Port, LD1_Pin,GPIO_PIN_SET);
 			  }
 			  else if(message.status==0)
 			  {
-				printf("led=0\r\n");
+				//printf("led=0\r\n");
 				HAL_GPIO_WritePin(LD1_GPIO_Port, LD1_Pin,GPIO_PIN_RESET);
 			  }
+			  //figyelmen kivul hagyja az egyeb uzeneteket,
+			  //egy uzenetbol mindig csak fix hosszut olvas a bufferbe
 	 }
-	 printf("stat=0\r\n");
+	 else
+	 {
+		 //printf("stat=0\r\n");
+	 }
+	 datacounter--;
+	// printf("datacounter\r\n");
 	 return message;
 }
 
-//void HAL_UART_RxCpltCallback  ( UART_HandleTypeDef *  huart )
-//{
-//	if (huart->Instance == UART3)
-//	 {
-//		 HAL_UART_Receive_IT(&hlpuart1, &rxdata, 1);
-//	 }
-//}
 
 
+void HAL_UART_RxCpltCallback  ( UART_HandleTypeDef *  huart )
+{
+		if(uartcounter==message_length-1)
+		{
+			data[uartcounter]=ch;
+			uartcounter=0;
+			while( !( writedata_tobuffer(data, message_length) ) ); //lehet ga ha 1 hosszu jon es az veletel az azonosito , addig mig a read ad neki helyetTODO
+			datacounter++;
+			printf("datacounter: %d\r\n", datacounter);
+			//ha hosszabbb jon abbol is csak az elso 2-t masolja
+		}
+		else
+		{
+			data[uartcounter]=ch;
+			uartcounter++;
+		}
+		HAL_UART_Receive_IT(&huart3, &ch, 1);
+}
 /* USER CODE END 0 */
 
 /**
@@ -116,9 +142,6 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-	 uint8_t buffer[128];
-	 size_t message_length=2;
-	 bool stat;
 
   /* USER CODE END 1 */
 
@@ -152,21 +175,15 @@ int main(void)
 
   /* USER CODE END 2 */
   //HAL_UART_Receive(&huart3, buffer, message_length, HAL_MAX_DELAY);
-
+  HAL_UART_Receive_IT(&huart3, &ch, 1);
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+
+	  if(datacounter > 0)
+			  decode_and_execute();
     /* USER CODE END WHILE */
-	  printf("parapara1111\r\n");
-	  HAL_Delay(1000);
-	  HAL_UART_Receive(&huart3, buffer, message_length, HAL_MAX_DELAY);
-	  HAL_Delay(1000);
-
-	  printf("parapara2222\r\n");
-	  HAL_Delay(1000);
-
-	  receive_message(&stat, buffer, message_length);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

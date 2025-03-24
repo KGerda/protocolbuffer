@@ -1,8 +1,9 @@
-../Core/Src/main.c:66:5:__io_putchar	16	static
-../Core/Src/main.c:72:11:receive_message	48	static
-../Core/Src/main.c:115:5:main	144	static
-../Core/Src/main.c:179:6:SystemClock_Config	120	static
-../Core/Src/main.c:242:13:MX_USART3_UART_Init	8	static
-../Core/Src/main.c:290:13:MX_GPIO_Init	48	static
-../Core/Src/main.c:339:6:MPU_Config	24	static
-../Core/Src/main.c:370:6:Error_Handler	4	static,ignoring_inline_asm
+../Core/Src/main.c:73:5:__io_putchar	16	static
+../Core/Src/main.c:79:11:decode_and_execute	32	static
+../Core/Src/main.c:117:6:HAL_UART_RxCpltCallback	16	static
+../Core/Src/main.c:142:5:main	8	static
+../Core/Src/main.c:197:6:SystemClock_Config	120	static
+../Core/Src/main.c:260:13:MX_USART3_UART_Init	8	static
+../Core/Src/main.c:308:13:MX_GPIO_Init	48	static
+../Core/Src/main.c:357:6:MPU_Config	24	static
+../Core/Src/main.c:388:6:Error_Handler	4	static,ignoring_inline_asm

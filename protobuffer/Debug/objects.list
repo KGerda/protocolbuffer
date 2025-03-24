@@ -1,3 +1,4 @@
+"./Core/Src/circularbuffer.o"
 "./Core/Src/led_blink.pb.o"
 "./Core/Src/main.o"
 "./Core/Src/pb_common.o"
