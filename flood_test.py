@@ -19,15 +19,16 @@ try:
         if random.random() < 0.8:  
             # 80%-ban helyes üzenet küldése
             message = msg_on.SerializeToString() if random.random() < 0.5 else msg_off.SerializeToString()
-        #else:
+            message = b'\xFF' + message
+        else:
             # 20%-ban érvénytelen adatok küldése
-            # message = b"INVALID_DATA_" + bytes([random.randint(0, 255)]) * random.randint(1, 5)
+             message = b"INVALID_DATA_" + bytes([random.randint(0, 255)]) * random.randint(1, 5)
 
         ser.write(message)  # Küldés UART-on
         print(f"Sent: {message}")
 
         # Várakozás egy kis időt, hogy elkerüljük a buffer túlcsordulását
-        time.sleep(2)  
+        time.sleep(0.01)  
 
         # Visszajelzés olvasása, ha van
         if ser.in_waiting > 0:

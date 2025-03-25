@@ -32,12 +32,15 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 #define message_length 2
+#define message_id 0x08
 uint8_t buffer[BUFFER_LEN];
 uint8_t data[32]={0};
 uint8_t ch=0;
-bool stat=0;
+bool LedStat=0;
 uint8_t datacounter=0;
-uint8_t uartcounter=0;
+uint8_t UartSign=0;
+
+
 
 /* USER CODE END PTD */
 
@@ -85,11 +88,11 @@ LedStatus decode_and_execute()   //bool *stat,uint8_t *buffer,uint8_t length
 	 /* Create a stream that reads from the buffer. */
 	 pb_istream_t stream = pb_istream_from_buffer(data, message_length);
 
-	 stat = pb_decode(&stream, LedStatus_fields, &message);
+	 LedStat = pb_decode(&stream, LedStatus_fields, &message);
 
-	 if(stat==1)
+	 if(LedStat==1)
 	 {
-		 //printf("stat=1\r\n");
+		 //printf("LedStat=1\r\n");
 			  if(message.status==1)
 			  {
 			   // printf("led=1\r\n");
@@ -105,7 +108,7 @@ LedStatus decode_and_execute()   //bool *stat,uint8_t *buffer,uint8_t length
 	 }
 	 else
 	 {
-		 //printf("stat=0\r\n");
+		 //printf("LedStat=0\r\n");
 	 }
 	 datacounter--;
 	// printf("datacounter\r\n");
@@ -116,19 +119,31 @@ LedStatus decode_and_execute()   //bool *stat,uint8_t *buffer,uint8_t length
 
 void HAL_UART_RxCpltCallback  ( UART_HandleTypeDef *  huart )
 {
-		if(uartcounter==message_length-1)
+		if(ch==0xFF)   //startbyte
 		{
-			data[uartcounter]=ch;
-			uartcounter=0;
-			while( !( writedata_tobuffer(data, message_length) ) ); //lehet ga ha 1 hosszu jon es az veletel az azonosito , addig mig a read ad neki helyetTODO
-			datacounter++;
-			printf("datacounter: %d\r\n", datacounter);
-			//ha hosszabbb jon abbol is csak az elso 2-t masolja
+			UartSign=1;
 		}
-		else
+		else if(UartSign ==1 && ch==message_id)
 		{
-			data[uartcounter]=ch;
-			uartcounter++;
+			data[UartSign-1]=ch;
+			UartSign=2;
+		}
+		else if(UartSign>1)
+		{
+			if(UartSign != message_length)
+			{
+				data[UartSign-1]=ch;
+				UartSign++;
+			}
+			else
+			{
+				data[UartSign-1]=ch;
+				UartSign=0;
+				while( !( writedata_tobuffer(data, message_length) ) ); //addig mig a readPtr ad neki helyet TODO
+				datacounter++;
+				printf("datacounter: %d\r\n", datacounter);
+
+			}
 		}
 		HAL_UART_Receive_IT(&huart3, &ch, 1);
 }

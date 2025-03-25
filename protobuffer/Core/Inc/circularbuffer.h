@@ -13,7 +13,7 @@
 #include <stdint.h>
 #include "stdbool.h"
 
-#define BUFFER_LEN (1000)
+#define BUFFER_LEN (50)
 
 void getdata_frombuffer(uint8_t data[],uint8_t len);
 bool writedata_tobuffer(uint8_t data[],uint8_t len);
