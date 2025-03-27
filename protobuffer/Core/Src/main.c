@@ -18,6 +18,9 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "memorymap.h"
+#include "usart.h"
+#include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -26,6 +29,7 @@
 #include <pb_decode.h>
 #include "led_blink.pb.h"
 #include "circularbuffer.h"
+//#include "print.h"
 
 /* USER CODE END Includes */
 
@@ -33,15 +37,9 @@
 /* USER CODE BEGIN PTD */
 #define message_length 2
 #define message_id 0x08
-uint8_t buffer[BUFFER_LEN];
-uint8_t data[32]={0};
-uint8_t ch=0;
-bool LedStat=0;
-uint8_t datacounter=0;
-uint8_t UartSign=0;
 
-
-
+#define LED_ON 1
+#define LED_OFF 0
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -56,32 +54,46 @@ uint8_t UartSign=0;
 
 /* Private variables ---------------------------------------------------------*/
 
-UART_HandleTypeDef huart3;
-
 /* USER CODE BEGIN PV */
+
+uint8_t buffer[BUFFER_LEN];
+uint8_t data[32]={0};
+uint8_t ch=0;
+bool LedStat=0;
+uint32_t DataCounter=0;
+uint8_t UartSign=0;
 
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MPU_Config(void);
-static void MX_GPIO_Init(void);
-static void MX_USART3_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+/**
+* @brief function to use printf with uart
+* @param ch : character to transmit
+* @retval ch
+*/
 int __io_putchar(int ch)
 {
 	HAL_UART_Transmit(&huart3, (uint8_t*)&ch, 1, 0xFFFF);
 	return ch;
 }
+/**
+* @brief function for decode protocolbuffer message
+* @param None
+* @retval None
+*/
 
-LedStatus decode_and_execute()   //bool *stat,uint8_t *buffer,uint8_t length
+LedStatus decode()
 {
-	getdata_frombuffer(data, message_length);
+	 getdata_frombuffer(data, message_length);
 	 /* Allocate space for the decoded message. */
 	 LedStatus message = LedStatus_init_default;
 
@@ -90,36 +102,46 @@ LedStatus decode_and_execute()   //bool *stat,uint8_t *buffer,uint8_t length
 
 	 LedStat = pb_decode(&stream, LedStatus_fields, &message);
 
-	 if(LedStat==1)
-	 {
-		 //printf("LedStat=1\r\n");
-			  if(message.status==1)
-			  {
-			   // printf("led=1\r\n");
-			    HAL_GPIO_WritePin(LD1_GPIO_Port, LD1_Pin,GPIO_PIN_SET);
-			  }
-			  else if(message.status==0)
-			  {
-				//printf("led=0\r\n");
-				HAL_GPIO_WritePin(LD1_GPIO_Port, LD1_Pin,GPIO_PIN_RESET);
-			  }
-			  //figyelmen kivul hagyja az egyeb uzeneteket,
-			  //egy uzenetbol mindig csak fix hosszut olvas a bufferbe
-	 }
-	 else
-	 {
-		 //printf("LedStat=0\r\n");
-	 }
-	 datacounter--;
-	// printf("datacounter\r\n");
+	 DataCounter--;   										/*1 data take out from buffer*/
 	 return message;
+}
+/**
+* @brief function for execute protocolbuffer message, Led on/off
+* @param None
+* @retval None
+*/
+void execute(LedStatus message)
+{
+	 if(LedStat==1)
+		 {
+				  if(message.status==LED_ON)
+				  {
+				    //printf("led=1\r\n");       /*for debug*/
+				    HAL_GPIO_WritePin(LD1_GPIO_Port, LD1_Pin,GPIO_PIN_SET);
+				  }
+				  else if(message.status==LED_OFF)
+				  {
+					//printf("led=0\r\n");			/*for debug*/
+					HAL_GPIO_WritePin(LD1_GPIO_Port, LD1_Pin,GPIO_PIN_RESET);
+				  }
+				  /*invalid messages are ignored.*/
+		 }
+		 /*invalid messages can not be here*/
 }
 
 
 
+/**
+* @brief function for handle uart interrupts
+* This function checks if the first byte is the start byte (0xFF), and the second byte is the message ID.
+* After reading the relevant data, it stores the processed information into the circular buffer.
+* @param UartSign: counts the relevant data
+* @retval None
+*/
 void HAL_UART_RxCpltCallback  ( UART_HandleTypeDef *  huart )
 {
-		if(ch==0xFF)   //startbyte
+	if(huart->Instance==USART3){
+		if(ch==0xFF)   										/*startbyte*/
 		{
 			UartSign=1;
 		}
@@ -139,13 +161,17 @@ void HAL_UART_RxCpltCallback  ( UART_HandleTypeDef *  huart )
 			{
 				data[UartSign-1]=ch;
 				UartSign=0;
-				while( !( writedata_tobuffer(data, message_length) ) ); //addig mig a readPtr ad neki helyet TODO
-				datacounter++;
-				printf("datacounter: %d\r\n", datacounter);
-
+				while( !( writedata_tobuffer(data, message_length)))					/*Until space is freed up for data*/
+				{
+					execute(decode());
+					printf("forcolt decode\r\n");
+					/*if the buffer is full with unprocessed data, process*/
+				}
+				DataCounter++;															/*1 data arrived*/
 			}
 		}
 		HAL_UART_Receive_IT(&huart3, &ch, 1);
+	}
 }
 /* USER CODE END 0 */
 
@@ -183,22 +209,27 @@ int main(void)
   MX_GPIO_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
+
+  /*test the Led1 peripheral*/
   HAL_GPIO_WritePin(LD1_GPIO_Port, LD1_Pin,GPIO_PIN_SET);
   HAL_Delay(1000);
   HAL_GPIO_WritePin(LD1_GPIO_Port, LD1_Pin,GPIO_PIN_RESET);
   HAL_Delay(1000);
 
-  /* USER CODE END 2 */
-  //HAL_UART_Receive(&huart3, buffer, message_length, HAL_MAX_DELAY);
   HAL_UART_Receive_IT(&huart3, &ch, 1);
+  /* USER CODE END 2 */
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-
-	  if(datacounter > 0)
-			  decode_and_execute();
+	  printf("DataCounter: %ld\r\n", DataCounter);			/*for testing*/
+	  if(DataCounter > 0)
+	  {
+		execute(decode());
+	  }
     /* USER CODE END WHILE */
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -264,102 +295,6 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-}
-
-/**
-  * @brief USART3 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_USART3_UART_Init(void)
-{
-
-  /* USER CODE BEGIN USART3_Init 0 */
-
-  /* USER CODE END USART3_Init 0 */
-
-  /* USER CODE BEGIN USART3_Init 1 */
-
-  /* USER CODE END USART3_Init 1 */
-  huart3.Instance = USART3;
-  huart3.Init.BaudRate = 115200;
-  huart3.Init.WordLength = UART_WORDLENGTH_8B;
-  huart3.Init.StopBits = UART_STOPBITS_1;
-  huart3.Init.Parity = UART_PARITY_NONE;
-  huart3.Init.Mode = UART_MODE_TX_RX;
-  huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart3.Init.OverSampling = UART_OVERSAMPLING_16;
-  huart3.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  huart3.Init.ClockPrescaler = UART_PRESCALER_DIV1;
-  huart3.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-  if (HAL_UART_Init(&huart3) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_UARTEx_SetTxFifoThreshold(&huart3, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_UARTEx_SetRxFifoThreshold(&huart3, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_UARTEx_DisableFifoMode(&huart3) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN USART3_Init 2 */
-
-  /* USER CODE END USART3_Init 2 */
-
-}
-
-/**
-  * @brief GPIO Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_GPIO_Init(void)
-{
-  GPIO_InitTypeDef GPIO_InitStruct = {0};
-/* USER CODE BEGIN MX_GPIO_Init_1 */
-/* USER CODE END MX_GPIO_Init_1 */
-
-  /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOC_CLK_ENABLE();
-  __HAL_RCC_GPIOH_CLK_ENABLE();
-  __HAL_RCC_GPIOB_CLK_ENABLE();
-  __HAL_RCC_GPIOD_CLK_ENABLE();
-  __HAL_RCC_GPIOE_CLK_ENABLE();
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, LD1_Pin|LD3_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin : B1_Pin */
-  GPIO_InitStruct.Pin = B1_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : LD1_Pin LD3_Pin */
-  GPIO_InitStruct.Pin = LD1_Pin|LD3_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : LD2_Pin */
-  GPIO_InitStruct.Pin = LD2_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
-
-/* USER CODE BEGIN MX_GPIO_Init_2 */
-/* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */

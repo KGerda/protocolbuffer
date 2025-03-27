@@ -1,2 +1,2 @@
 ../Core/Src/circularbuffer.c:9:6:getdata_frombuffer	4
-../Core/Src/circularbuffer.c:34:6:writedata_tobuffer	3
+../Core/Src/circularbuffer.c:34:6:writedata_tobuffer	4

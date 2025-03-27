@@ -1,0 +1,43 @@
+"NUCLEO-H7A3ZI-Q board"
+
+flood_test.py result:
+.
+.
+.
+Received: DataCounter: 9
+Received: DataCounter: 10
+Received: DataCounter: 9
+Received: DataCounter: 9
+Received: DataCounter: 9
+Received: DataCounter: 9
+Received: DataCounter: 9
+Received: DataCounter: 10
+Received: DataCounter: 10
+Received: DataCounter: 10
+Received: DataCounter: 11
+Received: DataCounter: 10
+Received: DataCounter: 12
+Received: DataCounter: 12
+Received: DataCounter: 12
+Received: DataCounter: 13
+Received: DataCounter: 13
+Received: DataCounter: 14
+Received: DataCounter: 14
+Received: DataCounter: 14
+Received: DataCounter: 14
+Received: DataCounter: 13
+Received: DataCounter: 13
+Received: DataCounter: 13
+Received: DataCounter: 13
+Received: DataCounter: 12
+Received: DataCounter: 12
+.
+.
+.
+Flood test stopped...
+...
+Enter a command ('on' / 'off'): off
+Command sent: OFF
+
+A flood tesztet egy percig futtattam,
+majd egy egyszerő parancsal ellenőriztem a működést.

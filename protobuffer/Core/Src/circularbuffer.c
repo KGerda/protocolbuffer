@@ -16,12 +16,12 @@ void getdata_frombuffer(uint8_t ret_data[],uint8_t len)
 		else if (readPtr > writePtr)
 		  {
 			uint32_t firstPart = BUFFER_LEN - readPtr;
-	        if (len <= firstPart) // Ha elfér az egész adat a puffer végén
+	        if (len <= firstPart)                             /*If the data fits to the buffer*/
 	        {
 	            memcpy(ret_data, &buffer[readPtr], len);
 	            readPtr += len;
 	        }
-	        else // Ha a len nagyobb, mint a maradék hely a puffer végén
+	        else												/*If len is larger than the remaining space at the end of the buffer*/
 	        {
 	            memcpy(ret_data, &buffer[readPtr], firstPart);
 	            memcpy(&ret_data[firstPart], &buffer[0], len - firstPart);
@@ -33,9 +33,10 @@ void getdata_frombuffer(uint8_t ret_data[],uint8_t len)
 
 bool writedata_tobuffer(uint8_t data[],uint8_t len)
 {
-     // iras   *data
-	if( (writePtr+len) < (BUFFER_LEN))
+	if( (writePtr+len) < (BUFFER_LEN) )
 	{
+		if(writePtr+len ==readPtr)				/*always have one space (2 bytes) empty*/
+			return 0;							/*Not increase datacounter*/
 		memcpy(&buffer[writePtr],data,len);
 		writePtr+= len;
 		return 1;
@@ -43,17 +44,17 @@ bool writedata_tobuffer(uint8_t data[],uint8_t len)
 	}
 	else
 	{
-		/* buffer első fele */
+		/* First part of the data*/
 		uint32_t firstPart = BUFFER_LEN-writePtr;
 		if(readPtr>len-firstPart)
 		{
 		memcpy(&buffer[writePtr],data,firstPart);
-		/* Atcsordulas utani resz */
+		/* Back part of the stream */
 		memcpy(&buffer[0],&data[firstPart],len-firstPart);
 		writePtr = len-firstPart;
 		return 1;
 		}
 		else
-			return 0;  //ekkor nem noveli datacountert
+			return 0;  /*Not increase datacounter*/
     }
 }

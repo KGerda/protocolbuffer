@@ -28,7 +28,7 @@ try:
         print(f"Sent: {message}")
 
         # Várakozás egy kis időt, hogy elkerüljük a buffer túlcsordulását
-        time.sleep(0.01)  
+        time.sleep(0.000001)  
 
         # Visszajelzés olvasása, ha van
         if ser.in_waiting > 0:

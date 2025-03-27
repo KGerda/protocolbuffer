@@ -1,0 +1,32 @@
+"NUCLEO-H7A3ZI-Q board"
+
+sent_proto.py result:
+
+Received: led=1			//1.adat
+Received: DataCounter: 3	//eddig 3 adat erkezett meg
+Received: led=0			//2.adat
+Received: DataCounter: 8	//3.adat érvénytelen
+Received: DataCounter: 7	//innentől egyesével dolgozza fel az adatokat
+Received: led=1
+Received: DataCounter: 6
+Received: led=1
+Received: DataCounter: 5
+Received: led=1
+Received: DataCounter: 4
+Received: led=0
+Received: DataCounter: 3
+Received: DataCounter: 2
+Received: led=1
+Received: DataCounter: 1
+Received: led=1
+Received: DataCounter: 0	//ha nincs több adat nem végez adatfeldolgozást
+Received: DataCounter: 0
+Received: DataCounter: 0
+Received: DataCounter: 0
+Received: DataCounter: 0
+Program interrupted. Closing...
+
+A folyamatosan küldött adatokat képes a program feldolgozni.
+A tesztet a 10 byte méretű buffer használatával készítettem el, 
+hogy tudjam tesztelni a cirkuláris buffer-em megvalósítását is. 
+Az adatok összesen 20 byte helyet igényeltek ebben a tesztben.
