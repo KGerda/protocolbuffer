@@ -1,0 +1,2 @@
+../Core/Src/circularbuffer.c:7:6:getdata_frombuffer	32	static
+../Core/Src/circularbuffer.c:27:6:writedata_tobuffer	24	static

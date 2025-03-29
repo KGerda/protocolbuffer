@@ -1,0 +1,10 @@
+Using some kind of terminal in Windows.
+
+cd ...protocolbuffer\proto_generator\generator-bin 
+
+then:
+
+protoc --proto_path=...protocolbuffer\proto_generator\messages --nanopb_out=. ...protocolbuffer\proto_generator\messages\led_blink.proto
+
+protoc --proto_path=...protocolbuffer\proto_generator\messages --python_out=. ...protocolbuffer\proto_generator\messages\led_blink.proto
+

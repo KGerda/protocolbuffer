@@ -39,5 +39,7 @@ Flood test stopped...
 Enter a command ('on' / 'off'): off
 Command sent: OFF
 
-A flood tesztet egy percig futtattam,
-majd egy egyszerő parancsal ellenőriztem a működést.
+The flood test continuously sends data to the microcontroller, 
+with 20% of the data being invalid and 80% valid.
+I ran the test for one minute, 
+then verified the results using a simple command from user.py.

@@ -1,0 +1,9 @@
+// A very simple led blinking protocol definition
+
+syntax = "proto2";
+
+message LedStatus {
+     required int32 status = 1;
+     
+}
+
