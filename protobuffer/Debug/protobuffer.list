@@ -23,9 +23,9 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
   9 .ARM.attributes 0000002e  00000000  00000000  0000c06c  2**0
                   CONTENTS, READONLY
- 10 .debug_info   00013d50  00000000  00000000  0000c09a  2**0
+ 10 .debug_info   00013d4f  00000000  00000000  0000c09a  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 11 .debug_abbrev 00002d4c  00000000  00000000  0001fdea  2**0
+ 11 .debug_abbrev 00002d4b  00000000  00000000  0001fde9  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  12 .debug_aranges 00000df8  00000000  00000000  00022b38  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
@@ -401,26 +401,25 @@ Disassembly of section .text:
  800067e:	bf00      	nop
 
 08000680 <getdata_frombuffer>:
+
 extern uint8_t buffer[BUFFER_LEN];
 volatile uint32_t writePtr = 0;
 volatile uint32_t readPtr = 0;
 
-void getdata_frombuffer(uint8_t ret_data[], uint8_t len)
-{
+void getdata_frombuffer(uint8_t ret_data[], uint8_t len) {
  8000680:	b580      	push	{r7, lr}
  8000682:	b084      	sub	sp, #16
  8000684:	af00      	add	r7, sp, #0
  8000686:	6078      	str	r0, [r7, #4]
  8000688:	460b      	mov	r3, r1
  800068a:	70fb      	strb	r3, [r7, #3]
-	if (readPtr < writePtr)
+	if (readPtr < writePtr) {
  800068c:	4b28      	ldr	r3, [pc, #160]	@ (8000730 <getdata_frombuffer+0xb0>)
  800068e:	681a      	ldr	r2, [r3, #0]
  8000690:	4b28      	ldr	r3, [pc, #160]	@ (8000734 <getdata_frombuffer+0xb4>)
  8000692:	681b      	ldr	r3, [r3, #0]
  8000694:	429a      	cmp	r2, r3
  8000696:	d20f      	bcs.n	80006b8 <getdata_frombuffer+0x38>
-	{
 		memcpy(ret_data, &buffer[readPtr], len);
  8000698:	4b25      	ldr	r3, [pc, #148]	@ (8000730 <getdata_frombuffer+0xb0>)
  800069a:	681b      	ldr	r3, [r3, #0]
@@ -444,7 +443,7 @@ void getdata_frombuffer(uint8_t ret_data[], uint8_t len)
 	}
 }
  80006b6:	e036      	b.n	8000726 <getdata_frombuffer+0xa6>
-	else if (readPtr > writePtr)
+	} else if (readPtr > writePtr) {
  80006b8:	4b1d      	ldr	r3, [pc, #116]	@ (8000730 <getdata_frombuffer+0xb0>)
  80006ba:	681a      	ldr	r2, [r3, #0]
  80006bc:	4b1d      	ldr	r3, [pc, #116]	@ (8000734 <getdata_frombuffer+0xb4>)
@@ -456,7 +455,7 @@ void getdata_frombuffer(uint8_t ret_data[], uint8_t len)
  80006c6:	681b      	ldr	r3, [r3, #0]
  80006c8:	f5c3 737a 	rsb	r3, r3, #1000	@ 0x3e8
  80006cc:	60fb      	str	r3, [r7, #12]
-		if (len <= firstPart)
+		if (len <= firstPart) {
  80006ce:	78fb      	ldrb	r3, [r7, #3]
  80006d0:	68fa      	ldr	r2, [r7, #12]
  80006d2:	429a      	cmp	r2, r3
@@ -516,22 +515,20 @@ void getdata_frombuffer(uint8_t ret_data[], uint8_t len)
 
 0800073c <writedata_tobuffer>:
 
-bool writedata_tobuffer(uint8_t data[], uint8_t len)
-{
+bool writedata_tobuffer(uint8_t data[], uint8_t len) {
  800073c:	b580      	push	{r7, lr}
  800073e:	b084      	sub	sp, #16
  8000740:	af00      	add	r7, sp, #0
  8000742:	6078      	str	r0, [r7, #4]
  8000744:	460b      	mov	r3, r1
  8000746:	70fb      	strb	r3, [r7, #3]
-	if ((writePtr + len) < (BUFFER_LEN))
+	if ((writePtr + len) < (BUFFER_LEN)) {
  8000748:	78fa      	ldrb	r2, [r7, #3]
  800074a:	4b26      	ldr	r3, [pc, #152]	@ (80007e4 <writedata_tobuffer+0xa8>)
  800074c:	681b      	ldr	r3, [r3, #0]
  800074e:	4413      	add	r3, r2
  8000750:	f5b3 7f7a 	cmp.w	r3, #1000	@ 0x3e8
  8000754:	d21a      	bcs.n	800078c <writedata_tobuffer+0x50>
-	{
 		/*always have one space (2 bytes) empty*/
 		if (writePtr + len == readPtr)
  8000756:	78fa      	ldrb	r2, [r7, #3]
@@ -566,16 +563,14 @@ bool writedata_tobuffer(uint8_t data[], uint8_t len)
  8000788:	2301      	movs	r3, #1
  800078a:	e026      	b.n	80007da <writedata_tobuffer+0x9e>
 
-	}
-	else
-	{
+	} else {
 		/* First part of the data*/
 		uint32_t firstPart = BUFFER_LEN - writePtr;
  800078c:	4b15      	ldr	r3, [pc, #84]	@ (80007e4 <writedata_tobuffer+0xa8>)
  800078e:	681b      	ldr	r3, [r3, #0]
  8000790:	f5c3 737a 	rsb	r3, r3, #1000	@ 0x3e8
  8000794:	60fb      	str	r3, [r7, #12]
-		if (readPtr > len - firstPart)
+		if (readPtr > len - firstPart) {
  8000796:	78fa      	ldrb	r2, [r7, #3]
  8000798:	68fb      	ldr	r3, [r7, #12]
  800079a:	1ad2      	subs	r2, r2, r3
@@ -583,7 +578,6 @@ bool writedata_tobuffer(uint8_t data[], uint8_t len)
  800079e:	681b      	ldr	r3, [r3, #0]
  80007a0:	429a      	cmp	r2, r3
  80007a2:	d219      	bcs.n	80007d8 <writedata_tobuffer+0x9c>
-		{
 			memcpy(&buffer[writePtr], data, firstPart);
  80007a4:	4b0f      	ldr	r3, [pc, #60]	@ (80007e4 <writedata_tobuffer+0xa8>)
  80007a6:	681b      	ldr	r3, [r3, #0]
@@ -613,8 +607,7 @@ bool writedata_tobuffer(uint8_t data[], uint8_t len)
 			return 1;
  80007d4:	2301      	movs	r3, #1
  80007d6:	e000      	b.n	80007da <writedata_tobuffer+0x9e>
-		}
-		else
+		} else
 			/*Not increase datacounter*/
 			return 0;
  80007d8:	2300      	movs	r3, #0
@@ -730,12 +723,12 @@ void MX_GPIO_Init(void)
  80008b0:	58020400 	.word	0x58020400
 
 080008b4 <__io_putchar>:
+/**
  * @brief function to use printf with uart
  * @param ch : character to transmit
  * @retval ch
  */
-int __io_putchar(int ch)
-{
+int __io_putchar(int ch) {
  80008b4:	b580      	push	{r7, lr}
  80008b6:	b082      	sub	sp, #8
  80008b8:	af00      	add	r7, sp, #0
@@ -756,12 +749,12 @@ int __io_putchar(int ch)
  80008d4:	240004a8 	.word	0x240004a8
 
 080008d8 <decode>:
+ * @brief function for decode protocolbuffer message
  * @param None
  * @retval None
  */
 
-LedStatus decode()
-{
+LedStatus decode() {
  80008d8:	b580      	push	{r7, lr}
  80008da:	b086      	sub	sp, #24
  80008dc:	af00      	add	r7, sp, #0
@@ -782,7 +775,7 @@ LedStatus decode()
  80008ee:	490c      	ldr	r1, [pc, #48]	@ (8000920 <decode+0x48>)
  80008f0:	4618      	mov	r0, r3
  80008f2:	f000 fd29 	bl	8001348 <pb_istream_from_buffer>
-	MESSAGE_LENGTH);
+			MESSAGE_LENGTH);
 
 	LedStat = pb_decode(&stream, LedStatus_fields, &message);
  80008f6:	f107 0214 	add.w	r2, r7, #20
@@ -815,31 +808,29 @@ LedStatus decode()
  800092c:	2400049c 	.word	0x2400049c
 
 08000930 <execute>:
+/**
  * @brief function for execute protocolbuffer message, Led on/off
  * @param None
  * @retval None
  */
-void execute(LedStatus message)
-{
+void execute(LedStatus message) {
  8000930:	b580      	push	{r7, lr}
  8000932:	b082      	sub	sp, #8
  8000934:	af00      	add	r7, sp, #0
  8000936:	6078      	str	r0, [r7, #4]
-	if (LedStat != true)
+	if (LedStat != true) {
  8000938:	4b0e      	ldr	r3, [pc, #56]	@ (8000974 <execute+0x44>)
  800093a:	781b      	ldrb	r3, [r3, #0]
  800093c:	f083 0301 	eor.w	r3, r3, #1
  8000940:	b2db      	uxtb	r3, r3
  8000942:	2b00      	cmp	r3, #0
  8000944:	d111      	bne.n	800096a <execute+0x3a>
-	{
 		return;
 	}
-	if (message.status == LED_ON)
+	if (message.status == LED_ON) {
  8000946:	687b      	ldr	r3, [r7, #4]
  8000948:	2b01      	cmp	r3, #1
  800094a:	d105      	bne.n	8000958 <execute+0x28>
-	{
 		//printf("led=1\r\n"); /*for debug*/
 		HAL_GPIO_WritePin(LD1_GPIO_Port, LD1_Pin, GPIO_PIN_SET);
  800094c:	2201      	movs	r2, #1
@@ -847,12 +838,10 @@ void execute(LedStatus message)
  8000950:	4809      	ldr	r0, [pc, #36]	@ (8000978 <execute+0x48>)
  8000952:	f003 fdc9 	bl	80044e8 <HAL_GPIO_WritePin>
  8000956:	e009      	b.n	800096c <execute+0x3c>
-	}
-	else if (message.status == LED_OFF)
+	} else if (message.status == LED_OFF) {
  8000958:	687b      	ldr	r3, [r7, #4]
  800095a:	2b00      	cmp	r3, #0
  800095c:	d106      	bne.n	800096c <execute+0x3c>
-	{
 		//printf("led=0\r\n"); /*for debug*/
 		HAL_GPIO_WritePin(LD1_GPIO_Port, LD1_Pin, GPIO_PIN_RESET);
  800095e:	2200      	movs	r2, #0
@@ -874,41 +863,38 @@ void execute(LedStatus message)
  8000978:	58020400 	.word	0x58020400
 
 0800097c <HAL_UART_RxCpltCallback>:
+ * This function checks if the first byte is the start byte (0xFF), and the second byte is the message ID.
  * After reading the relevant data, it stores the processed information into the circular buffer.
  * @param UartSign: counts the relevant data
  * @retval None
  */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
  800097c:	b580      	push	{r7, lr}
  800097e:	b082      	sub	sp, #8
  8000980:	af00      	add	r7, sp, #0
  8000982:	6078      	str	r0, [r7, #4]
-	if (huart->Instance != USART3)
+	if (huart->Instance != USART3) {
  8000984:	687b      	ldr	r3, [r7, #4]
  8000986:	681b      	ldr	r3, [r3, #0]
  8000988:	4a36      	ldr	r2, [pc, #216]	@ (8000a64 <HAL_UART_RxCpltCallback+0xe8>)
  800098a:	4293      	cmp	r3, r2
  800098c:	d165      	bne.n	8000a5a <HAL_UART_RxCpltCallback+0xde>
-	{
 		return;
 	}
 
 	/*startbyte*/
-	if (ch == 0xFF)
+	if (ch == 0xFF) {
  800098e:	4b36      	ldr	r3, [pc, #216]	@ (8000a68 <HAL_UART_RxCpltCallback+0xec>)
  8000990:	781b      	ldrb	r3, [r3, #0]
  8000992:	b2db      	uxtb	r3, r3
  8000994:	2bff      	cmp	r3, #255	@ 0xff
  8000996:	d103      	bne.n	80009a0 <HAL_UART_RxCpltCallback+0x24>
-	{
 		UartSign = 1;
  8000998:	4b34      	ldr	r3, [pc, #208]	@ (8000a6c <HAL_UART_RxCpltCallback+0xf0>)
  800099a:	2201      	movs	r2, #1
  800099c:	701a      	strb	r2, [r3, #0]
  800099e:	e056      	b.n	8000a4e <HAL_UART_RxCpltCallback+0xd2>
-	}
-	else if (UartSign == 1 && ch == MESSAGE_ID)
+	} else if (UartSign == 1 && ch == MESSAGE_ID) {
  80009a0:	4b32      	ldr	r3, [pc, #200]	@ (8000a6c <HAL_UART_RxCpltCallback+0xf0>)
  80009a2:	781b      	ldrb	r3, [r3, #0]
  80009a4:	b2db      	uxtb	r3, r3
@@ -919,7 +905,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
  80009ae:	b2db      	uxtb	r3, r3
  80009b0:	2b08      	cmp	r3, #8
  80009b2:	d10c      	bne.n	80009ce <HAL_UART_RxCpltCallback+0x52>
-	{
 		data[UartSign - 1] = ch;
  80009b4:	4b2d      	ldr	r3, [pc, #180]	@ (8000a6c <HAL_UART_RxCpltCallback+0xf0>)
  80009b6:	781b      	ldrb	r3, [r3, #0]
@@ -935,21 +920,18 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
  80009c8:	2202      	movs	r2, #2
  80009ca:	701a      	strb	r2, [r3, #0]
  80009cc:	e03f      	b.n	8000a4e <HAL_UART_RxCpltCallback+0xd2>
-	}
-	else if (UartSign > 1)
+	} else if (UartSign > 1) {
  80009ce:	4b27      	ldr	r3, [pc, #156]	@ (8000a6c <HAL_UART_RxCpltCallback+0xf0>)
  80009d0:	781b      	ldrb	r3, [r3, #0]
  80009d2:	b2db      	uxtb	r3, r3
  80009d4:	2b01      	cmp	r3, #1
  80009d6:	d93a      	bls.n	8000a4e <HAL_UART_RxCpltCallback+0xd2>
-	{
-		if (UartSign != MESSAGE_LENGTH)
+		if (UartSign != MESSAGE_LENGTH) {
  80009d8:	4b24      	ldr	r3, [pc, #144]	@ (8000a6c <HAL_UART_RxCpltCallback+0xf0>)
  80009da:	781b      	ldrb	r3, [r3, #0]
  80009dc:	b2db      	uxtb	r3, r3
  80009de:	2b02      	cmp	r3, #2
  80009e0:	d010      	beq.n	8000a04 <HAL_UART_RxCpltCallback+0x88>
-		{
 			data[UartSign - 1] = ch;
  80009e2:	4b22      	ldr	r3, [pc, #136]	@ (8000a6c <HAL_UART_RxCpltCallback+0xf0>)
  80009e4:	781b      	ldrb	r3, [r3, #0]
@@ -969,9 +951,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
  80009fe:	4b1b      	ldr	r3, [pc, #108]	@ (8000a6c <HAL_UART_RxCpltCallback+0xf0>)
  8000a00:	701a      	strb	r2, [r3, #0]
  8000a02:	e024      	b.n	8000a4e <HAL_UART_RxCpltCallback+0xd2>
-		}
-		else
-		{
+		} else {
 			data[UartSign - 1] = ch;
  8000a04:	4b19      	ldr	r3, [pc, #100]	@ (8000a6c <HAL_UART_RxCpltCallback+0xf0>)
  8000a06:	781b      	ldrb	r3, [r3, #0]
@@ -987,9 +967,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
  8000a18:	2200      	movs	r2, #0
  8000a1a:	701a      	strb	r2, [r3, #0]
 			/*Until space is freed up for data*/
-			while (!(writedata_tobuffer((uint8_t*) data, MESSAGE_LENGTH)))
+			while (!(writedata_tobuffer((uint8_t*) data, MESSAGE_LENGTH))) {
  8000a1c:	e008      	b.n	8000a30 <HAL_UART_RxCpltCallback+0xb4>
-			{
 				/*if the buffer is full with unprocessed data, process*/
 				execute(decode());
  8000a1e:	f7ff ff5b 	bl	80008d8 <decode>
@@ -999,7 +978,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 				printf("forcolt decode\r\n");
  8000a2a:	4812      	ldr	r0, [pc, #72]	@ (8000a74 <HAL_UART_RxCpltCallback+0xf8>)
  8000a2c:	f009 f9e6 	bl	8009dfc <puts>
-			while (!(writedata_tobuffer((uint8_t*) data, MESSAGE_LENGTH)))
+			while (!(writedata_tobuffer((uint8_t*) data, MESSAGE_LENGTH))) {
  8000a30:	2102      	movs	r1, #2
  8000a32:	480f      	ldr	r0, [pc, #60]	@ (8000a70 <HAL_UART_RxCpltCallback+0xf4>)
  8000a34:	f7ff fe82 	bl	800073c <writedata_tobuffer>
@@ -1041,12 +1020,12 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
  8000a7c:	240004a8 	.word	0x240004a8
 
 08000a80 <main>:
+
 /**
  * @brief  The application entry point.
  * @retval int
  */
-int main(void)
-{
+int main(void) {
  8000a80:	b580      	push	{r7, lr}
  8000a82:	af00      	add	r7, sp, #0
 	/* USER CODE BEGIN 1 */
@@ -1103,23 +1082,22 @@ int main(void)
  8000abe:	490b      	ldr	r1, [pc, #44]	@ (8000aec <main+0x6c>)
  8000ac0:	480b      	ldr	r0, [pc, #44]	@ (8000af0 <main+0x70>)
  8000ac2:	f006 fc01 	bl	80072c8 <HAL_UART_Receive_IT>
+	/* USER CODE END 2 */
 
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
-	while (1)
-	{
+	while (1) {
 		printf("DataCounter: %ld\r\n", DataCounter); /*for testing*/
  8000ac6:	4b0b      	ldr	r3, [pc, #44]	@ (8000af4 <main+0x74>)
  8000ac8:	681b      	ldr	r3, [r3, #0]
  8000aca:	4619      	mov	r1, r3
  8000acc:	480a      	ldr	r0, [pc, #40]	@ (8000af8 <main+0x78>)
  8000ace:	f009 f92d 	bl	8009d2c <iprintf>
-		if (DataCounter > 0)
+		if (DataCounter > 0) {
  8000ad2:	4b08      	ldr	r3, [pc, #32]	@ (8000af4 <main+0x74>)
  8000ad4:	681b      	ldr	r3, [r3, #0]
  8000ad6:	2b00      	cmp	r3, #0
  8000ad8:	d0f5      	beq.n	8000ac6 <main+0x46>
-		{
 			execute(decode());
  8000ada:	f7ff fefd 	bl	80008d8 <decode>
  8000ade:	4603      	mov	r3, r0
@@ -1134,29 +1112,27 @@ int main(void)
  8000af8:	0800ab08 	.word	0x0800ab08
 
 08000afc <SystemClock_Config>:
+
 /**
  * @brief System Clock Configuration
  * @retval None
  */
-void SystemClock_Config(void)
-{
+void SystemClock_Config(void) {
  8000afc:	b580      	push	{r7, lr}
  8000afe:	b09c      	sub	sp, #112	@ 0x70
  8000b00:	af00      	add	r7, sp, #0
-	RCC_OscInitTypeDef RCC_OscInitStruct =
+	RCC_OscInitTypeDef RCC_OscInitStruct = { 0 };
  8000b02:	f107 0324 	add.w	r3, r7, #36	@ 0x24
  8000b06:	224c      	movs	r2, #76	@ 0x4c
  8000b08:	2100      	movs	r1, #0
  8000b0a:	4618      	mov	r0, r3
  8000b0c:	f009 fa56 	bl	8009fbc <memset>
-	{ 0 };
-	RCC_ClkInitTypeDef RCC_ClkInitStruct =
+	RCC_ClkInitTypeDef RCC_ClkInitStruct = { 0 };
  8000b10:	1d3b      	adds	r3, r7, #4
  8000b12:	2220      	movs	r2, #32
  8000b14:	2100      	movs	r1, #0
  8000b16:	4618      	mov	r0, r3
  8000b18:	f009 fa50 	bl	8009fbc <memset>
-	{ 0 };
 
 	/*AXI clock gating */
 	RCC->CKGAENR = 0xFFFFFFFF;
@@ -1186,7 +1162,7 @@ void SystemClock_Config(void)
  8000b44:	603b      	str	r3, [r7, #0]
  8000b46:	683b      	ldr	r3, [r7, #0]
 
-	while (!__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY))
+	while (!__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY)) {
  8000b48:	bf00      	nop
  8000b4a:	4b25      	ldr	r3, [pc, #148]	@ (8000be0 <SystemClock_Config+0xe4>)
  8000b4c:	699b      	ldr	r3, [r3, #24]
@@ -1237,14 +1213,13 @@ void SystemClock_Config(void)
 	RCC_OscInitStruct.PLL.PLLFRACN = 0;
  8000b88:	2300      	movs	r3, #0
  8000b8a:	66fb      	str	r3, [r7, #108]	@ 0x6c
-	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
  8000b8c:	f107 0324 	add.w	r3, r7, #36	@ 0x24
  8000b90:	4618      	mov	r0, r3
  8000b92:	f003 fd1d 	bl	80045d0 <HAL_RCC_OscConfig>
  8000b96:	4603      	mov	r3, r0
  8000b98:	2b00      	cmp	r3, #0
  8000b9a:	d001      	beq.n	8000ba0 <SystemClock_Config+0xa4>
-	{
 		Error_Handler();
  8000b9c:	f000 f84e 	bl	8000c3c <Error_Handler>
 	}
@@ -1278,7 +1253,7 @@ void SystemClock_Config(void)
  8000bbc:	2300      	movs	r3, #0
  8000bbe:	623b      	str	r3, [r7, #32]
 
-	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
+	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK) {
  8000bc0:	1d3b      	adds	r3, r7, #4
  8000bc2:	2101      	movs	r1, #1
  8000bc4:	4618      	mov	r0, r3
@@ -1286,7 +1261,6 @@ void SystemClock_Config(void)
  8000bca:	4603      	mov	r3, r0
  8000bcc:	2b00      	cmp	r3, #0
  8000bce:	d001      	beq.n	8000bd4 <SystemClock_Config+0xd8>
-	{
 		Error_Handler();
  8000bd0:	f000 f834 	bl	8000c3c <Error_Handler>
 	}
@@ -1299,23 +1273,22 @@ void SystemClock_Config(void)
  8000be0:	58024800 	.word	0x58024800
 
 08000be4 <MPU_Config>:
+
 /* USER CODE END 4 */
 
 /* MPU Configuration */
 
-void MPU_Config(void)
-{
+void MPU_Config(void) {
  8000be4:	b580      	push	{r7, lr}
  8000be6:	b084      	sub	sp, #16
  8000be8:	af00      	add	r7, sp, #0
-	MPU_Region_InitTypeDef MPU_InitStruct =
+	MPU_Region_InitTypeDef MPU_InitStruct = { 0 };
  8000bea:	463b      	mov	r3, r7
  8000bec:	2200      	movs	r2, #0
  8000bee:	601a      	str	r2, [r3, #0]
  8000bf0:	605a      	str	r2, [r3, #4]
  8000bf2:	609a      	str	r2, [r3, #8]
  8000bf4:	60da      	str	r2, [r3, #12]
-	{ 0 };
 
 	/* Disables the MPU */
 	HAL_MPU_Disable();
@@ -1373,12 +1346,12 @@ void MPU_Config(void)
  8000c3a:	bd80      	pop	{r7, pc}
 
 08000c3c <Error_Handler>:
+
 /**
  * @brief  This function is executed in case of error occurrence.
  * @retval None
  */
-void Error_Handler(void)
-{
+void Error_Handler(void) {
  8000c3c:	b480      	push	{r7}
  8000c3e:	af00      	add	r7, sp, #0
   \details Disables IRQ interrupts by setting the I-bit in the CPSR.
@@ -1393,7 +1366,7 @@ __STATIC_FORCEINLINE void __disable_irq(void)
 	/* USER CODE BEGIN Error_Handler_Debug */
 	/* User can add his own implementation to report the HAL error return state */
 	__disable_irq();
-	while (1)
+	while (1) {
  8000c44:	bf00      	nop
  8000c46:	e7fd      	b.n	8000c44 <Error_Handler+0x8>
 
